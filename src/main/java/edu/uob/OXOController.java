@@ -20,10 +20,44 @@ public class OXOController {
             gameModel.setCurrentPlayerNumber(1);
         }
     }
-    public void addRow() {}
-    public void removeRow() {}
-    public void addColumn() {}
-    public void removeColumn() {}
+    public void addRow() {
+        if(gameModel.getNumberOfRows() < 9){
+            gameModel.addRow();
+        }
+    }
+    public void removeRow() {
+        if(gameModel.getNumberOfRows() > 3 && rowMov()){
+            gameModel.removeRow();
+        }
+    }
+    public void addColumn() {
+        if(gameModel.getNumberOfColumns() < 9){
+            gameModel.addCol();
+        }
+    }
+    public void removeColumn() {
+        if(gameModel.getNumberOfColumns() > 3 && colMov()){
+            gameModel.removeCol();
+        }
+    }
+    private boolean rowMov(){
+        int rowNum = gameModel.getNumberOfRows() - 1;
+        for(int i = 0; i < gameModel.getNumberOfColumns(); i++){
+            if(gameModel.getCellOwner(rowNum, i) != null) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private boolean colMov(){
+        int colNum = gameModel.getNumberOfColumns() - 1;
+        for(int i = 0; i < gameModel.getNumberOfRows(); i++){
+            if(gameModel.getCellOwner(i, colNum) != null) {
+                return false;
+            }
+        }
+        return true;
+    }
     public void increaseWinThreshold() {}
     public void decreaseWinThreshold() {}
     public void reset() {
