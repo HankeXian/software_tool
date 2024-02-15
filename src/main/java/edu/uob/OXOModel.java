@@ -7,12 +7,14 @@ public class OXOModel {
     private ArrayList<ArrayList<OXOPlayer>> cells;
     private OXOPlayer[] players;
     private int currentPlayerNumber;
+    private boolean IsAct;
     private OXOPlayer winner;
     private boolean gameDrawn;
     private int winThreshold;
 
     public OXOModel(int numberOfRows, int numberOfColumns, int winThresh) {
         winThreshold = winThresh;
+        IsAct = true;
         cells = new ArrayList<>();
         for (int i =0; i<numberOfRows; i++){
             ArrayList<OXOPlayer> row = new ArrayList<>();
@@ -47,6 +49,7 @@ public class OXOModel {
 
     public void setWinner(OXOPlayer player) {
         winner = player;
+        IsAct = false;
     }
 
     public int getCurrentPlayerNumber() {
@@ -109,6 +112,14 @@ public class OXOModel {
 
     public int getWinThreshold() {
         return winThreshold;
+    }
+
+    public void setAct(boolean act) {
+        IsAct = act;
+    }
+
+    public boolean getIsAct() {
+        return IsAct;
     }
 
     public void setGameDrawn(boolean isDrawn) {
