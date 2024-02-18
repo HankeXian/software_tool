@@ -22,8 +22,8 @@ public class OXOController {
         int row = command.charAt(0)-'a';
         int col = command.charAt(1)-'1';
 
-        if(Character.isLowerCase(chRow)){
-            chRow = Character.toUpperCase(chRow);
+        if(Character.isUpperCase(chRow)){
+            chRow = Character.toLowerCase(chRow);
             row = command.charAt(0)- 'A';
         }
         if(!Character.isDigit(chCol)){
@@ -32,10 +32,10 @@ public class OXOController {
         else if(!Character.isLetter(chRow)){
             throw new InvalidIdentifierCharacterException(RowOrColumn.ROW, chRow);
         }
-        if(col<=0 || col > 9){
+        if(col< 0 || col >= gameModel.getNumberOfColumns()){
             throw new OutsideCellRangeException(RowOrColumn.COLUMN, col);
         }
-        else if(chRow < 'a' || chRow > 'i'){
+        if(row < 0 || row >= gameModel.getNumberOfRows()){
             throw new OutsideCellRangeException(RowOrColumn.ROW, row);
         }
 
@@ -191,8 +191,37 @@ public class OXOController {
         return false;
     }
 
-    public void increaseWinThreshold() {}
-    public void decreaseWinThreshold() {}
+    public void increaseWinThreshold() {
+        if(!gameModel.getIsAct()) {
+            return;
+        }
+        int winNum = gameModel.getWinThreshold();
+        if(winNum >= gameModel.getNumberOfRows() || winNum >= gameModel.getNumberOfColumns()){
+            return;
+        }
+        gameModel.setWinThreshold(winNum + 1);
+    }
+    public void decreaseWinThreshold() {
+        if(!gameModel.getIsAct() || isStart()){
+            return;
+        }
+        int winNum = gameModel.getWinThreshold();
+        if(winNum <= 3){
+            return;
+        }
+        gameModel.setWinThreshold(winNum - 1);
+    }
+
+    public boolean isStart(){
+        for(int i = 0; i< gameModel.getNumberOfRows(); i++){
+            for(int j = 0; j< gameModel.getNumberOfColumns(); j++){
+                if(gameModel.getCellOwner(i, j)!=null){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public void reset() {
         for(int i=0; i< gameModel.getNumberOfRows(); i++){
             for(int j = 0; j< gameModel.getNumberOfColumns(); j++){
