@@ -1,5 +1,7 @@
 package edu.uob;
 
+import edu.uob.OXOMoveException.*;
+
 public class OXOController {
     OXOModel gameModel;
 
@@ -11,8 +13,35 @@ public class OXOController {
         if(!gameModel.getIsAct()){
             return;
         }
+        if(command.length()!=2){
+            throw new InvalidIdentifierLengthException(command.length());
+        }
+
+        char chRow = command.charAt(0);
+        char chCol = command.charAt(1);
         int row = command.charAt(0)-'a';
         int col = command.charAt(1)-'1';
+
+        if(Character.isLowerCase(chRow)){
+            chRow = Character.toUpperCase(chRow);
+            row = command.charAt(0)- 'A';
+        }
+        if(!Character.isDigit(chCol)){
+            throw new InvalidIdentifierCharacterException(RowOrColumn.COLUMN, chCol);
+        }
+        else if(!Character.isLetter(chRow)){
+            throw new InvalidIdentifierCharacterException(RowOrColumn.ROW, chRow);
+        }
+        if(col<=0 || col > 9){
+            throw new OutsideCellRangeException(RowOrColumn.COLUMN, col);
+        }
+        else if(chRow < 'a' || chRow > 'i'){
+            throw new OutsideCellRangeException(RowOrColumn.ROW, row);
+        }
+
+        if(gameModel.getCellOwner(row, col) != null){
+            throw new CellAlreadyTakenException(row, col);
+        }
 
         gameModel.setCellOwner(row, col, gameModel.getPlayerByNumber(gameModel.getCurrentPlayerNumber()));
 
